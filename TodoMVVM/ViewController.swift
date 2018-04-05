@@ -8,26 +8,28 @@
 
 import UIKit
 
+protocol TodoView: class {
+    func insertTodoItem()
+}
+
 class ViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var tableView: UITableView!
-    
-    let identifier = "todoItemCell"
     
     var viewModel: TodoViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        viewModel = TodoViewModel()
+        viewModel = TodoViewModel(view: self)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     @IBAction func addButtonClicked(_ sender: UIButton) {
+        guard let text = textField.text, !text.isEmpty else {return}
+        viewModel.todoItemAdded(newTodoText: text)
     }
 }
 
@@ -38,9 +40,33 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! TodoItemTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TodoItemTableViewCell
         let item = viewModel.items[indexPath.row]
         cell.configure(with: item)
         return cell
     }
 }
+
+
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+    }
+}
+
+
+extension ViewController: TodoView {
+    func insertTodoItem() {
+        self.tableView.beginUpdates()
+        self.tableView.insertRows(at: [IndexPath(row: viewModel.items.count - 1, section: 0)], with: .automatic)
+        self.tableView.endUpdates()
+    }  
+}
+
+
+
+
+
+
+
+
