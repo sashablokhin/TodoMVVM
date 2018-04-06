@@ -8,6 +8,10 @@
 
 import Foundation
 
+protocol TodoItemViewDelegate {
+    func itemSelected()
+}
+
 protocol TodoItemPresentable {
     var text: String? { get }
     var date: String? { get }
@@ -18,8 +22,14 @@ struct TodoItemViewModel: TodoItemPresentable {
     var date: String?
 }
 
-protocol TodoItemViewDelegate {
-    func todoItemAdded(newTodoText: String)
+extension TodoItemViewModel: TodoItemViewDelegate {
+    func itemSelected() {
+        print("itemSelected", text!)
+    }
+}
+
+protocol TodoViewDelegate {
+    func todoItemAdded()
 }
 
 protocol TodoViewPresentable {
@@ -41,10 +51,12 @@ class TodoViewModel: TodoViewPresentable {
     }
 }
 
-extension TodoViewModel: TodoItemViewDelegate {
-    func todoItemAdded(newTodoText: String) {
+extension TodoViewModel: TodoViewDelegate {
+    func todoItemAdded() {
         let item = TodoItemViewModel(text: newTodoText, date: currentTime())
         self.items.append(item)
+        
+        newTodoText = ""
         self.view?.insertTodoItem()
     }
 }

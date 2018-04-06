@@ -29,7 +29,8 @@ class ViewController: UIViewController {
 
     @IBAction func addButtonClicked(_ sender: UIButton) {
         guard let text = textField.text, !text.isEmpty else {return}
-        viewModel.todoItemAdded(newTodoText: text)
+        viewModel.newTodoText = text
+        viewModel.todoItemAdded()
     }
 }
 
@@ -50,13 +51,15 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let item = viewModel.items[indexPath.row] as? TodoItemViewDelegate
+        item?.itemSelected()
     }
 }
 
 
 extension ViewController: TodoView {
     func insertTodoItem() {
+        self.textField.text = viewModel.newTodoText
         self.tableView.beginUpdates()
         self.tableView.insertRows(at: [IndexPath(row: viewModel.items.count - 1, section: 0)], with: .automatic)
         self.tableView.endUpdates()
