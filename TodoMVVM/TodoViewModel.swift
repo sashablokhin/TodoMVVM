@@ -14,7 +14,7 @@ protocol TodoMenuItemViewPresentable {
 }
 
 protocol TodoMenuItemViewDelegate {
-    func menuItemSelected()
+    func menuItemSelected(row: Int)
 }
 
 class TodoMenuItemViewModel: TodoMenuItemViewPresentable, TodoMenuItemViewDelegate {
@@ -26,29 +26,27 @@ class TodoMenuItemViewModel: TodoMenuItemViewPresentable, TodoMenuItemViewDelega
         self.parent = parentViewModel
     }
     
-    func menuItemSelected() {
+    func menuItemSelected(row: Int) {
         
     }
 }
 
 class RemoveMenuItemViewModel: TodoMenuItemViewModel {
-    override func menuItemSelected() {
-        print("RemoveMenuItemViewModel")
-        parent?.removeSelected()
+    override func menuItemSelected(row: Int) {
+        parent?.removeSelected(row: row)
     }
 }
 
 class DoneMenuItemViewModel: TodoMenuItemViewModel {
-    override func menuItemSelected() {
-        print("DoneMenuItemViewModel")
-        parent?.doneSelected()
+    override func menuItemSelected(row: Int) {
+        parent?.doneSelected(row: row)
     }
 }
 
 protocol TodoItemViewDelegate: class {
     func itemSelected()
-    func removeSelected()
-    func doneSelected()
+    func removeSelected(row: Int)
+    func doneSelected(row: Int)
 }
 
 protocol TodoItemPresentable {
@@ -85,14 +83,12 @@ extension TodoItemViewModel: TodoItemViewDelegate {
         print("itemSelected", text!)
     }
     
-    func removeSelected() {
-        print("removeSelected", text!)
-        //parent?.itemRemoved()
+    func removeSelected(row: Int) {
+        parent?.itemRemoved(row: row)
     }
     
-    func doneSelected() {
-        print("doneSelected", text!)
-        //parent?.itemDone()
+    func doneSelected(row: Int) {
+        parent?.itemDone(row: row)
     }
 }
 

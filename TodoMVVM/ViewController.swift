@@ -60,7 +60,6 @@ extension ViewController: UITableViewDelegate {
     }
    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-
         
         let item = viewModel.items[indexPath.row]
         
@@ -71,8 +70,7 @@ extension ViewController: UITableViewDelegate {
                 
                 if let delegate = menuItem as? TodoMenuItemViewDelegate {
                     DispatchQueue.global(qos: .background).async {
-                        //self.viewModel.itemRemoved(row: indexPath.row)
-                        delegate.menuItemSelected()
+                        delegate.menuItemSelected(row: indexPath.row)
                     }
                 }
 
